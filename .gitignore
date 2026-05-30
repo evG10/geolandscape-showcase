@@ -1,0 +1,33 @@
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vs/
+.vscode/
+photo/
+
+# Old local placeholder, not used in the showcase README
+docs/images/01-generated-overview.png
+
+# Unreal/private project files
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+*.uasset
+*.umap
+*.uproject
+*.uplugin
+
+# Source code must stay private in this showcase repo
+Source/
+Plugins/
+Config/
+Content/
+
+# Secrets
+.env
+*.key
+*.pem
+*token*
+*secret*
