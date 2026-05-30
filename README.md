@@ -1,132 +1,134 @@
 # GeoLandscape
 
-**Private Unreal Engine 5 plugin for generating playable landscapes and cities from real geodata.**
+[Русский](README.md) | [English](README.en.md)
 
-> Source code is private. This repository is a public showcase: screenshots, workflow, architecture notes and feature overview without plugin sources, API keys or internal project files.
+**Приватный плагин для Unreal Engine 5, который генерирует игровые ландшафты и города по реальным геоданным.**
 
-## Preview
+> Исходный код приватный. Этот репозиторий - публичная витрина проекта: скриншоты, описание workflow, архитектура и обзор возможностей без исходников плагина, API-ключей и внутренних файлов проекта.
 
-Playable generated scene:
+## Превью
+
+Игровой вид с уже сгенерированной сценой:
 
 ![Playable generated city](docs/images/01-playable-city-view.png)
 
-Editor window preview:
+Окно плагина в редакторе:
 
 ![GeoLandscape editor window](docs/images/02-editor-window.png)
 
-## Gallery
+## Галерея
 
-| Generation map and settings | Landscape and water |
+| Карта генерации и настройки | Ландшафт и вода |
 |---|---|
 | ![Generation map and settings](docs/images/03-generation-map-settings.png) | ![Landscape and water overview](docs/images/04-landscape-water-overview.png) |
 
-| Generated city layout | Editable generated actor |
+| Сгенерированный город | Редактируемый актор |
 |---|---|
 | ![Generated city layout](docs/images/05-city-layout-buildings.png) | ![Editable building actor](docs/images/06-editable-building-actor.png) |
 
-## What It Does
+## Что Делает Плагин
 
-GeoLandscape is an Unreal Engine 5 editor plugin that generates a scene from real-world geodata:
+GeoLandscape - это editor-плагин для Unreal Engine 5, который создает сцену на основе реальных геоданных:
 
-- landscape from real elevation/heightmap data;
-- city search and boundaries through OpenStreetMap data;
-- roads, road profiles, intersections, shoulders, curbs and markings;
-- buildings from OSM footprints and height/level tags;
-- rivers, canals, lakes and ocean zones;
-- terrain fitting under roads and generated city areas;
-- automatic landscape materials for waterbed, beach, grass, cliffs and snow;
-- scene environment: sun/moon, sky atmosphere, skylight, fog and post process.
+- ландшафт по реальным данным высот;
+- поиск города и границ через OpenStreetMap;
+- дороги, профили дорог, перекрестки, обочины, бордюры и разметку;
+- здания по OSM footprints и тегам высоты/этажности;
+- реки, каналы, озера и океанские зоны;
+- подгонку рельефа под дороги и городскую застройку;
+- автоматические материалы ландшафта для дна, пляжа, травы, скал и снега;
+- окружение сцены: солнце/луна, sky atmosphere, skylight, fog и post process.
 
-## Workflow
+## Как Работает
 
-1. Open `Window -> GeoLandscape` in Unreal Editor.
-2. Search a city through Nominatim.
-3. Select the area on the OSM map.
-4. Choose zoom, quality and generation limits.
-5. Generate terrain, roads, buildings, water and environment as separate pipeline stages.
-6. Edit generated actors manually and regenerate while preserving selected changes.
+1. Открыть `Window -> GeoLandscape` в Unreal Editor.
+2. Найти город через Nominatim.
+3. Выбрать область на OSM-карте.
+4. Настроить zoom, качество и лимиты генерации.
+5. Запустить отдельные этапы: terrain, roads, buildings, water и environment.
+6. Отредактировать сгенерированные акторы вручную и при необходимости перегенерировать сцену с сохранением выбранных правок.
 
 ```mermaid
 flowchart LR
-    A[City search<br/>Nominatim] --> B[OSM boundary<br/>and map area]
-    B --> C[Elevation tiles<br/>AWS / Mapbox / Google]
+    A[Поиск города<br/>Nominatim] --> B[OSM-граница<br/>и область карты]
+    B --> C[Данные высот<br/>AWS / Mapbox / Google]
     C --> D[UE Landscape<br/>heightmap + scale]
-    B --> E[OSM vectors<br/>roads / buildings / water]
-    E --> F[Road generation<br/>splines + mesh + collision]
-    E --> G[Building generation<br/>footprints + levels]
-    E --> H[Water generation<br/>riverbeds + lake/ocean]
-    F --> I[Terrain fitting<br/>roads and city pads]
+    B --> E[OSM-векторы<br/>roads / buildings / water]
+    E --> F[Генерация дорог<br/>splines + mesh + collision]
+    E --> G[Генерация зданий<br/>footprints + levels]
+    E --> H[Генерация воды<br/>riverbeds + lake/ocean]
+    F --> I[Подгонка рельефа<br/>дороги и город]
     G --> I
-    H --> J[Materials and environment]
+    H --> J[Материалы и окружение]
     I --> J
 ```
 
-## Feature Overview
+## Возможности
 
-| Area | Implemented functionality |
+| Область | Что реализовано |
 |---|---|
-| Editor UI | `Window -> GeoLandscape`, city search, map selection, zoom/quality settings, generation stages |
-| Terrain | AWS Terrarium, Mapbox Terrain-RGB, Google Elevation API, real-world scale, bathymetry |
-| Landscape | valid UE landscape size selection, collision rebuild, Nanite/HLOD-oriented settings |
-| OSM pipeline | Overpass loading by chunks, city clipping, deduplication, partial API error handling |
-| Roads | OSM `highway` profiles, spline editing, mesh/collision, intersections, shoulders, curbs, markings |
-| Buildings | OSM footprints, `height`, `building:levels`, editable actors, batch/sector generation |
-| Water | `waterway`, `natural=water`, riverbed cutting, lake/ocean actors through UE Water plugin |
-| Materials | waterbed, beach, grass, cliffs/slopes, snow, shoreline blend, normal/roughness tuning |
-| Environment | sun/moon, sky atmosphere, skylight, height fog, post process presets |
+| Editor UI | `Window -> GeoLandscape`, поиск города, выбор области на карте, настройки zoom/качества, отдельные этапы генерации |
+| Terrain | AWS Terrarium, Mapbox Terrain-RGB, Google Elevation API, реальный масштаб, батиметрия |
+| Landscape | подбор валидного размера UE landscape, пересборка collision, настройки под Nanite/HLOD |
+| OSM pipeline | загрузка через Overpass чанками, clipping по границе города, дедупликация, обработка частичных ошибок API |
+| Дороги | профили по OSM `highway`, spline editing, mesh/collision, перекрестки, обочины, бордюры, разметка |
+| Здания | OSM footprints, `height`, `building:levels`, редактируемые акторы, batch/sector generation |
+| Вода | `waterway`, `natural=water`, вырезание русел, lake/ocean actors через UE Water plugin |
+| Материалы | дно, пляж, трава, скалы/уклоны, снег, shoreline blend, normal/roughness-настройки |
+| Окружение | солнце/луна, sky atmosphere, skylight, height fog, post process presets |
 
-## Technical Highlights
+## Технические Детали
 
-- C++ editor plugin split into runtime and editor modules.
-- Slate-based editor window and map picker.
-- Heightmap conversion from tile data into Unreal landscape coordinates.
-- OSM vector parsing for roads, buildings and water objects.
-- Generated road actors and sector actors for large city performance.
-- Editable generated building actors with metadata from OSM.
-- Regeneration flow that preserves manual edits/deletions where possible.
-- VRAM-conscious modes for large cities and batch generation.
+- C++ editor-плагин, разделенный на runtime и editor модули.
+- Интерфейс редактора на Slate.
+- Конвертация heightmap/tile данных в координаты Unreal Landscape.
+- Парсинг OSM-векторов для дорог, зданий и водных объектов.
+- Road actors и sector actors для больших городов.
+- Редактируемые building actors с OSM metadata.
+- Перегенерация с сохранением части ручных правок и удалений.
+- VRAM-conscious режимы и batch generation для крупных городов.
 
-## Media
+## Медиа
 
-Current media included in this showcase:
+В витрине уже есть:
 
-| File | What to show |
+| Файл | Что показывает |
 |---|---|
-| `docs/images/01-playable-city-view.png` | Playable view with landscape, grass, generated city and character scale |
-| `docs/images/02-editor-window.png` | GeoLandscape editor window with city search and generation settings |
-| `docs/images/03-generation-map-settings.png` | OSM map, selected region, generation settings and progress log |
-| `docs/images/04-landscape-water-overview.png` | Generated island/coast landscape and water |
-| `docs/images/05-city-layout-buildings.png` | Large generated city layout from OSM buildings |
-| `docs/images/06-editable-building-actor.png` | Individual generated building selected and editable in Unreal |
+| `docs/images/01-playable-city-view.png` | Игровой вид: ландшафт, трава, город и масштаб относительно персонажа |
+| `docs/images/02-editor-window.png` | Окно GeoLandscape с поиском города и настройками генерации |
+| `docs/images/03-generation-map-settings.png` | OSM-карта, выбранная область, настройки и лог генерации |
+| `docs/images/04-landscape-water-overview.png` | Сгенерированный островной/прибрежный ландшафт и вода |
+| `docs/images/05-city-layout-buildings.png` | Большой городской layout по OSM-зданиям |
+| `docs/images/06-editable-building-actor.png` | Отдельное сгенерированное здание выбрано и редактируется в Unreal |
 
-Recommended media still worth adding:
+Что еще стоит добавить:
 
-- close-up of roads/intersections/curbs;
-- close-up of riverbeds and shoreline;
-- 30-90 second workflow video: city search -> generation -> generated scene.
+- крупный план дорог, перекрестков и бордюров;
+- крупный план рек, воды и береговой линии;
+- короткое видео 30-90 секунд: поиск города -> генерация -> готовая сцена.
 
-See [docs/MEDIA_GUIDE.md](docs/MEDIA_GUIDE.md) for capture instructions.
+Инструкция по подготовке медиа: [docs/MEDIA_GUIDE.md](docs/MEDIA_GUIDE.md).
 
-## Repository Scope
+## Состав Репозитория
 
-This showcase intentionally does not include:
+Витрина специально не содержит:
 
-- source code;
-- Unreal `.uasset` files;
-- API keys and provider tokens;
-- local cache files;
-- generated build artifacts;
-- private logs and machine-specific paths.
+- исходный код;
+- Unreal `.uasset` файлы;
+- API-ключи и токены провайдеров;
+- локальные cache-файлы;
+- build-артефакты;
+- приватные логи и machine-specific пути.
 
-It is safe to publish:
+Публиковать безопасно:
 
-- screenshots and short videos;
-- high-level architecture;
-- feature descriptions;
-- technical decisions;
-- known limitations and roadmap.
+- скриншоты и короткие видео;
+- высокоуровневую архитектуру;
+- описание возможностей;
+- технические решения;
+- ограничения и roadmap.
 
-## More Details
+## Дополнительно
 
 - [Case study](docs/CASE_STUDY.md)
 - [Media guide](docs/MEDIA_GUIDE.md)
