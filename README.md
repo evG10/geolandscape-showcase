@@ -105,7 +105,6 @@ ODbL) and from the elevation source you choose, so your project must credit them
 
 ## About this repository
 
-GeoLandscape is developed by [evG10](https://github.com/evG10), with Claude, an AI assistant
-made by [Anthropic](https://www.anthropic.com), as co-author of the code and documentation.
-The plugin source code is private; this repository is its public home for documentation, media and support. The
+GeoLandscape is developed by [evG10](https://github.com/evG10). The plugin source code is
+private; this repository is its public home for documentation, media and support. The
 earlier development write-up is in [docs/CASE_STUDY.md](docs/CASE_STUDY.md).
