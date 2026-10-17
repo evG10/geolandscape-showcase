@@ -1,135 +1,110 @@
-# GeoLandscape
+# GeoLandscape for Unreal Engine 5
 
-[Русский](README.md) | [English](README.en.md)
+[English](README.md) | [Русский](README.ru.md)
 
-**Приватный плагин для Unreal Engine 5, который генерирует игровые ландшафты и города по реальным геоданным.**
+![Geirangerfjord generated with GeoLandscape](docs/images/v1/hero_fjord.jpg)
 
-> Исходный код приватный. Этот репозиторий - публичная витрина проекта: скриншоты, описание workflow, архитектура и обзор возможностей без исходников плагина, API-ключей и внутренних файлов проекта.
+**Turn any place on Earth into a streamed World Partition level.** Pick an area on the map,
+press **Create region**, and GeoLandscape builds real 1:1 terrain with OpenStreetMap roads,
+a city layout, rivers, PCG forests, grass, a distant view for the game and a 30 km horizon,
+all inside the Unreal Editor.
 
-## Превью
+- **Get it:** on Fab (the link appears here when the listing is published).
+- **Manual:** [English](docs/Manual.md) · [Русский](docs/Manual.ru.md)
+- **Help and bug reports:** [GitHub Issues](https://github.com/evG10/geolandscape-showcase/issues)
 
-Игровой вид с уже сгенерированной сценой:
+This repository holds the documentation, screenshots and support for the plugin. The plugin
+source code is not public.
 
-![Playable generated city](docs/images/01-playable-city-view.png)
+![Realistic or hand-painted ground](docs/images/v1/teaser_ground_styles.gif)
 
-Окно плагина в редакторе:
+## What it does
 
-![GeoLandscape editor window](docs/images/02-editor-window.png)
+- **Terrain** from open elevation data: Copernicus GLO-30 worldwide, USGS 3DEP (US,
+  1–10 m), swissALTI3D (Switzerland, 2 m), Terrarium, or your own GeoTIFF. The height range
+  is chosen per region, so Everest and the Dead Sea both fit.
+- **Roads** from OpenStreetMap, conformed to the terrain with the ground levelled under
+  them; bridges and tunnels keep their own height.
+- **City layout** from real building footprints and heights: a translucent blockout of the
+  city and its roads to model your own buildings on.
+- **Rivers and lakes** carved into the terrain, plus optional UE Water oceans, lakes and
+  rivers, with white-water cascades on steep falls.
+- **PCG forests** in groves and glades with understory, editable vegetation palettes and
+  landscape grass. Low-poly trees, shrubs, grass and rocks are included.
+- **Ground material** with no painting: grass, soil, forest floor, rock, sand, snow and sea
+  floor from slope, height and coastline; realistic or hand-painted, switched in one click.
+- **Distant view (HLOD)** for cities, roads, forests and terrain, and a **30 km horizon**
+  around the region.
+- **Large regions** as 2 × 2 km streamed tiles in three passes. Finished passes are saved,
+  so a region can be stopped, resumed and extended later.
+- Editor UI in **English and Russian**. Demo levels: Mount Everest, the Matterhorn and
+  Zermatt, San Francisco and Geirangerfjord.
 
-## Галерея
+## Gallery
 
-| Карта генерации и настройки | Ландшафт и вода |
+| | |
 |---|---|
-| ![Generation map and settings](docs/images/03-generation-map-settings.png) | ![Landscape and water overview](docs/images/04-landscape-water-overview.png) |
+| ![The Matterhorn](docs/images/v1/matterhorn.jpg) | ![Geirangerfjord](docs/images/v1/fjord.jpg) |
+| The Matterhorn and Zermatt at 1:1 scale | Geirangerfjord: the sea, rivers and forests |
+| ![San Francisco city layout](docs/images/v1/city_layout.jpg) | ![Forest and meadow](docs/images/v1/forest_meadow.jpg) |
+| San Francisco: OpenStreetMap roads and a city layout | PCG forests, meadows and grass |
 
-| Сгенерированный город | Редактируемый актор |
-|---|---|
-| ![Generated city layout](docs/images/05-city-layout-buildings.png) | ![Editable building actor](docs/images/06-editable-building-actor.png) |
+![Realistic and hand-painted ground side by side](docs/images/v1/ground_styles.jpg)
 
-## Что Делает Плагин
+## Quick start
 
-GeoLandscape - это editor-плагин для Unreal Engine 5, который создает сцену на основе реальных геоданных:
+1. Install GeoLandscape from Fab and enable it in **Edit → Plugins**.
+2. Press **GeoLandscape** on the main toolbar, or **Ctrl+Alt+G**.
 
-- ландшафт по реальным данным высот;
-- поиск города и границ через OpenStreetMap;
-- дороги, профили дорог, перекрестки, обочины, бордюры и разметку;
-- здания по OSM footprints и тегам высоты/этажности;
-- реки, каналы, озера и океанские зоны;
-- подгонку рельефа под дороги и городскую застройку;
-- автоматические материалы ландшафта для дна, пляжа, травы, скал и снега;
-- окружение сцены: солнце/луна, sky atmosphere, skylight, fog и post process.
+   ![The GeoLandscape toolbar button](docs/images/v1/toolbar.png)
 
-## Как Работает
+3. Search for a place or pick an example, set the width and length in kilometres.
+4. Choose what to create and press **Create region**.
 
-1. Открыть `Window -> GeoLandscape` в Unreal Editor.
-2. Найти город через Nominatim.
-3. Выбрать область на OSM-карте.
-4. Настроить zoom, качество и лимиты генерации.
-5. Запустить отдельные этапы: terrain, roads, buildings, water и environment.
-6. Отредактировать сгенерированные акторы вручную и при необходимости перегенерировать сцену с сохранением выбранных правок.
+   ![The GeoLandscape panel](docs/images/v1/panel.png)
 
-```mermaid
-flowchart LR
-    A[Поиск города<br/>Nominatim] --> B[OSM-граница<br/>и область карты]
-    B --> C[Данные высот<br/>AWS / Mapbox / Google]
-    C --> D[UE Landscape<br/>heightmap + scale]
-    B --> E[OSM-векторы<br/>roads / buildings / water]
-    E --> F[Генерация дорог<br/>splines + mesh + collision]
-    E --> G[Генерация зданий<br/>footprints + levels]
-    E --> H[Генерация воды<br/>riverbeds + lake/ocean]
-    F --> I[Подгонка рельефа<br/>дороги и город]
-    G --> I
-    H --> J[Материалы и окружение]
-    I --> J
-```
+5. When the tiles are done, press **Distant view** before playing.
 
-## Возможности
+   ![A region being generated](docs/images/v1/panel_generating.png)
 
-| Область | Что реализовано |
-|---|---|
-| Editor UI | `Window -> GeoLandscape`, поиск города, выбор области на карте, настройки zoom/качества, отдельные этапы генерации |
-| Terrain | AWS Terrarium, Mapbox Terrain-RGB, Google Elevation API, реальный масштаб, батиметрия |
-| Landscape | подбор валидного размера UE landscape, пересборка collision, настройки под Nanite/HLOD |
-| OSM pipeline | загрузка через Overpass чанками, clipping по границе города, дедупликация, обработка частичных ошибок API |
-| Дороги | профили по OSM `highway`, spline editing, mesh/collision, перекрестки, обочины, бордюры, разметка |
-| Здания | OSM footprints, `height`, `building:levels`, редактируемые акторы, batch/sector generation |
-| Вода | `waterway`, `natural=water`, вырезание русел, lake/ocean actors через UE Water plugin |
-| Материалы | дно, пляж, трава, скалы/уклоны, снег, shoreline blend, normal/roughness-настройки |
-| Окружение | солнце/луна, sky atmosphere, skylight, height fog, post process presets |
+The [manual](docs/Manual.md) covers every option, the console commands, performance and
+troubleshooting.
 
-## Технические Детали
+## Requirements
 
-- C++ editor-плагин, разделенный на runtime и editor модули.
-- Интерфейс редактора на Slate.
-- Конвертация heightmap/tile данных в координаты Unreal Landscape.
-- Парсинг OSM-векторов для дорог, зданий и водных объектов.
-- Road actors и sector actors для больших городов.
-- Редактируемые building actors с OSM metadata.
-- Перегенерация с сохранением части ручных правок и удалений.
-- VRAM-conscious режимы и batch generation для крупных городов.
+- Unreal Engine 5.8, Windows 64-bit editor.
+- A C++ project, or a Blueprint project with one C++ class added.
+- An internet connection while generating; downloaded data is cached for later runs.
+  Packaged games contain only the generated actors.
+- Recommended: 32 GB of RAM and an SSD for regions larger than about 10 × 10 km.
+- Engine plugins PCG, Water, Procedural Mesh Component and GeoReferencing (enabled
+  automatically).
 
-## Медиа
+## Known issues
 
-В витрине уже есть:
+- **UE Water near the camera in play.** In Play In Editor and Movie Render Queue, the UE
+  Water surface may be missing within about 1 km of the camera; farther away it is drawn,
+  and the editor viewport shows it correctly. UE Water is optional and off by default.
+- **Trees above the tree line.** Vegetation areas from OpenStreetMap on high mountains can
+  place trees on snow.
 
-| Файл | Что показывает |
-|---|---|
-| `docs/images/01-playable-city-view.png` | Игровой вид: ландшафт, трава, город и масштаб относительно персонажа |
-| `docs/images/02-editor-window.png` | Окно GeoLandscape с поиском города и настройками генерации |
-| `docs/images/03-generation-map-settings.png` | OSM-карта, выбранная область, настройки и лог генерации |
-| `docs/images/04-landscape-water-overview.png` | Сгенерированный островной/прибрежный ландшафт и вода |
-| `docs/images/05-city-layout-buildings.png` | Большой городской layout по OSM-зданиям |
-| `docs/images/06-editable-building-actor.png` | Отдельное сгенерированное здание выбрано и редактируется в Unreal |
+Both are planned for the next update.
 
-Что еще стоит добавить:
+## Support
 
-- крупный план дорог, перекрестков и бордюров;
-- крупный план рек, воды и береговой линии;
-- короткое видео 30-90 секунд: поиск города -> генерация -> готовая сцена.
+Open an [issue](https://github.com/evG10/geolandscape-showcase/issues/new/choose) for
+questions and bug reports. Please include the engine version, the place and size of the
+region, and the Output Log lines that start with `LogGeoLandscape`. Search the existing
+issues first: your question may already have an answer.
 
-Инструкция по подготовке медиа: [docs/MEDIA_GUIDE.md](docs/MEDIA_GUIDE.md).
+## Data credits
 
-## Состав Репозитория
+Generated levels contain data derived from OpenStreetMap (© OpenStreetMap contributors,
+ODbL) and from the elevation source you choose, so your project must credit them.
+[THIRD_PARTY_NOTICES](docs/THIRD_PARTY_NOTICES.md) lists the credit lines and terms.
 
-Витрина специально не содержит:
+## About this repository
 
-- исходный код;
-- Unreal `.uasset` файлы;
-- API-ключи и токены провайдеров;
-- локальные cache-файлы;
-- build-артефакты;
-- приватные логи и machine-specific пути.
-
-Публиковать безопасно:
-
-- скриншоты и короткие видео;
-- высокоуровневую архитектуру;
-- описание возможностей;
-- технические решения;
-- ограничения и roadmap.
-
-## Дополнительно
-
-- [Case study](docs/CASE_STUDY.md)
-- [Media guide](docs/MEDIA_GUIDE.md)
-- [Publishing checklist](docs/PUBLISHING.md)
+GeoLandscape is developed by [evG10](https://github.com/evG10). The plugin source code is
+private; this repository is its public home for documentation, media and support. The
+earlier development write-up is in [docs/CASE_STUDY.md](docs/CASE_STUDY.md).

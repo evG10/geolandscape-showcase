@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Manual (English)
+    url: https://github.com/evG10/geolandscape-showcase/blob/main/docs/Manual.md
+    about: Every option, console commands, performance and troubleshooting.
+  - name: Руководство (русский)
+    url: https://github.com/evG10/geolandscape-showcase/blob/main/docs/Manual.ru.md
+    about: Все параметры, консольные команды, производительность и решение проблем.

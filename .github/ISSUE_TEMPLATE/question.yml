@@ -1,0 +1,23 @@
+name: Question
+description: Ask how to do something with GeoLandscape.
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You may write in English or Russian. The
+        [manual](https://github.com/evG10/geolandscape-showcase/blob/main/docs/Manual.md)
+        may already answer it.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What you want to do and what you have tried.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Engine and plugin version
+      placeholder: "UE 5.8.0, GeoLandscape 1.0.0"

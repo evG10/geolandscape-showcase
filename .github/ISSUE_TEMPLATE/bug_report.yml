@@ -1,0 +1,43 @@
+name: Bug report
+description: Something in GeoLandscape does not work as described in the manual.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. You may write in English or Russian.
+        Before posting, check the **Troubleshooting** and **Known issues** sections of the
+        [manual](https://github.com/evG10/geolandscape-showcase/blob/main/docs/Manual.md).
+  - type: input
+    id: versions
+    attributes:
+      label: Engine and plugin version
+      description: Unreal Engine version and the GeoLandscape version from Edit → Plugins.
+      placeholder: "UE 5.8.0, GeoLandscape 1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you got instead.
+    validations:
+      required: true
+  - type: input
+    id: region
+    attributes:
+      label: Region
+      description: The place (name or coordinates) and the size in km, and the options you enabled.
+      placeholder: "Zermatt, 46.02 7.75, 8 × 6 km, roads + buildings + forest + UE water"
+  - type: textarea
+    id: log
+    attributes:
+      label: Output Log
+      description: The lines that start with `LogGeoLandscape` around the problem (Window → Output Log).
+      render: text
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots
+      description: Drag images here if they help to show the problem.
