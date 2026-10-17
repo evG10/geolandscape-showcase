@@ -9,11 +9,14 @@
 дорогами OpenStreetMap, разметкой города, реками, лесами PCG, травой, дальним видом для игры
 и горизонтом на 30 км — прямо в редакторе Unreal.
 
+- **Трейлер:** [смотреть на YouTube](https://youtu.be/XCidHqJr2lQ) (44 с)
 - **Где взять:** на Fab (ссылка появится здесь после публикации).
 - **Руководство:** [Русский](docs/Manual.ru.md) · [English](docs/Manual.md)
 - **Помощь и сообщения об ошибках:** [GitHub Issues](https://github.com/evG10/geolandscape-showcase/issues)
 
 Здесь лежат документация, скриншоты и поддержка плагина. Исходный код плагина закрыт.
+
+[![Трейлер GeoLandscape на YouTube](docs/images/v1/trailer.jpg)](https://youtu.be/XCidHqJr2lQ)
 
 ![Реалистичная или рисованная земля](docs/images/v1/teaser_ground_styles.gif)
 
@@ -102,6 +105,9 @@
 Созданные уровни содержат данные, полученные из OpenStreetMap (© участники OpenStreetMap,
 ODbL) и из выбранного источника высот, поэтому проект должен указать их.
 [THIRD_PARTY_NOTICES](docs/THIRD_PARTY_NOTICES.md) содержит строки для титров и условия.
+
+Музыка трейлера: «Prelude No. 20», автор [Chris Zabriskie](http://chriszabriskie.com/), лицензия
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## Об этом репозитории
 

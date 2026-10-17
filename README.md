@@ -9,12 +9,15 @@ press **Create region**, and GeoLandscape builds real 1:1 terrain with OpenStree
 a city layout, rivers, PCG forests, grass, a distant view for the game and a 30 km horizon,
 all inside the Unreal Editor.
 
+- **Trailer:** [watch on YouTube](https://youtu.be/XCidHqJr2lQ) (44 s)
 - **Get it:** on Fab (the link appears here when the listing is published).
 - **Manual:** [English](docs/Manual.md) · [Русский](docs/Manual.ru.md)
 - **Help and bug reports:** [GitHub Issues](https://github.com/evG10/geolandscape-showcase/issues)
 
 This repository holds the documentation, screenshots and support for the plugin. The plugin
 source code is not public.
+
+[![GeoLandscape trailer on YouTube](docs/images/v1/trailer.jpg)](https://youtu.be/XCidHqJr2lQ)
 
 ![Realistic or hand-painted ground](docs/images/v1/teaser_ground_styles.gif)
 
@@ -102,6 +105,9 @@ issues first: your question may already have an answer.
 Generated levels contain data derived from OpenStreetMap (© OpenStreetMap contributors,
 ODbL) and from the elevation source you choose, so your project must credit them.
 [THIRD_PARTY_NOTICES](docs/THIRD_PARTY_NOTICES.md) lists the credit lines and terms.
+
+Trailer music: "Prelude No. 20" by [Chris Zabriskie](http://chriszabriskie.com/), licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## About this repository
 
